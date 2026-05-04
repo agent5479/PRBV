@@ -265,6 +265,58 @@
             "https://cors-anywhere.herokuapp.com/"
         ];
 
+        /** Wall clock in Pacific/Auckland from a time service (not the local device clock). */
+        const nzTimeApiUrl =
+            "https://timeapi.io/api/Time/current/zone?timeZone=Pacific%2FAuckland";
+
+        async function fetchNZWallClockFromUrl(url, timeoutMs = 5000) {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+            try {
+                const response = await fetch(url, { signal: controller.signal });
+                clearTimeout(timeoutId);
+                if (!response.ok) return null;
+                const data = await response.json();
+                if (
+                    typeof data.year !== "number" ||
+                    typeof data.month !== "number" ||
+                    typeof data.day !== "number"
+                ) {
+                    return null;
+                }
+                const dt = DateTime.fromObject(
+                    {
+                        year: data.year,
+                        month: data.month,
+                        day: data.day,
+                        hour: data.hour ?? 0,
+                        minute: data.minute ?? 0,
+                        second: data.seconds ?? 0,
+                        millisecond: data.milliSeconds ?? 0
+                    },
+                    { zone: targetTimeZone }
+                );
+                return dt.isValid ? dt : null;
+            } catch {
+                clearTimeout(timeoutId);
+                return null;
+            }
+        }
+
+        /**
+         * Current instant interpreted in NZ for filtering and display.
+         * Prefers timeapi.io (NZ calendar fields) so wrong local PC date/timezone does not skew "today".
+         */
+        async function getAuthoritativeNowNZ() {
+            let dt = await fetchNZWallClockFromUrl(nzTimeApiUrl);
+            if (!dt) {
+                dt = await fetchNZWallClockFromUrl(
+                    corsProxies[0] + encodeURIComponent(nzTimeApiUrl)
+                );
+            }
+            return dt || DateTime.now().setZone(targetTimeZone);
+        }
+
         const villaFeeds = {
             villa1: {
                 beds24: "https://api.beds24.com/ical/bookings.ics?roomid=318483&token=ea7b37ea5fc562875d2a5196a1a77ed8",
@@ -397,11 +449,9 @@
             }
         }
 
-        async function loadVilla(id, feeds) {
+        async function loadVilla(id, feeds, todayNZ) {
             const list = document.getElementById(id);
             list.innerHTML = `<li class='loading flex items-center'><i class='fas fa-spinner loading-icon mr-2'></i> Loading data...</li>`;
-
-            const todayNZ = DateTime.now().setZone(targetTimeZone);
             let finalResult = { 
                 status: 'error', 
                 html: "<li class='no-arrival'><i class='fas fa-exclamation-triangle mr-2 text-red-alert'></i> Failed to load data.</li>", 
@@ -463,13 +513,18 @@
         }
 
         async function refreshAll() {
+            const nowNZ = await getAuthoritativeNowNZ();
+            document.getElementById("current-date").textContent = nowNZ.toFormat(
+                "cccc, dd LLLL yyyy"
+            );
+
             const statuses = [];
             for (const [id, feeds] of Object.entries(villaFeeds)) {
-                const st = await loadVilla(id, feeds);
+                const st = await loadVilla(id, feeds, nowNZ);
                 statuses.push(` ${id.replace('villa', 'V')}: ${st}`);
             }
 
-            const now = DateTime.now().setZone(targetTimeZone).toFormat('HH:mm:ss');
+            const now = nowNZ.toFormat("HH:mm:ss");
             document.getElementById("debug").innerHTML =
                 `<strong>Last refresh:</strong> ${now} NZT ${statuses.join(' | ')}`;
         }
@@ -529,10 +584,8 @@
             }
         }
 
-        window.onload = function () {
-            document.getElementById("current-date").textContent =
-                DateTime.now().setZone(targetTimeZone).toFormat('cccc, dd LLLL yyyy');
-            refreshAll();
+        window.onload = async function () {
+            await refreshAll();
             lastRefreshTime = Date.now();
             startCardCycle();
             initializeRefreshButton();
