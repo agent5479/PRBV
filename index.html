@@ -273,7 +273,10 @@
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
             try {
-                const response = await fetch(url, { signal: controller.signal });
+                const response = await fetch(url, {
+                    signal: controller.signal,
+                    cache: "no-store"
+                });
                 clearTimeout(timeoutId);
                 if (!response.ok) return null;
                 const data = await response.json();
@@ -315,6 +318,18 @@
                 );
             }
             return dt || DateTime.now().setZone(targetTimeZone);
+        }
+
+        function applyHeroNzDate(nowNZ) {
+            const el = document.getElementById("current-date");
+            if (el) {
+                el.textContent = nowNZ.toFormat("cccc, dd LLLL yyyy");
+            }
+        }
+
+        /** Keeps the header date current when the tab stays open across days (independent of feed refresh). */
+        async function refreshHeroDateOnly() {
+            applyHeroNzDate(await getAuthoritativeNowNZ());
         }
 
         const villaFeeds = {
@@ -514,9 +529,7 @@
 
         async function refreshAll() {
             const nowNZ = await getAuthoritativeNowNZ();
-            document.getElementById("current-date").textContent = nowNZ.toFormat(
-                "cccc, dd LLLL yyyy"
-            );
+            applyHeroNzDate(nowNZ);
 
             const statuses = [];
             for (const [id, feeds] of Object.entries(villaFeeds)) {
@@ -590,7 +603,18 @@
             startCardCycle();
             initializeRefreshButton();
             // Auto-refresh every 60 minutes (conservative rate limiting)
-            setInterval(refreshAll, 60 * 60 * 1000);
+            setInterval(() => {
+                refreshAll().catch(() => {});
+            }, 60 * 60 * 1000);
+            // Header date must advance across NZ midnights even if feed refresh is delayed or throttled
+            setInterval(() => {
+                refreshHeroDateOnly().catch(() => {});
+            }, 15 * 60 * 1000);
+            document.addEventListener("visibilitychange", () => {
+                if (!document.hidden) {
+                    refreshHeroDateOnly().catch(() => {});
+                }
+            });
         }
     </script>
 </body>
