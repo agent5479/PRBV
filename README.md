@@ -18,10 +18,12 @@ Open [`index.html`](index.html) in a browser, or host it as a static site.
 
 Booking data comes from public **iCal (.ics)** feeds:
 
-1. **Google Calendar** (tried first)
-2. **Beds24** (fallback if Google fails)
+1. **Beds24** (tried first — source of truth for room assignments)
+2. **Google Calendar** (fallback if Beds24 fails)
 
 Because browsers block cross-origin calendar requests, the page tries several **CORS proxies** in order. Feed URLs are configured in `index.html` under `villaFeeds`.
+
+A Google-first copy is kept as [`legacy-index.html`](legacy-index.html) for comparison only. Do not use it as the live reception board.
 
 “Today” is resolved preferentially via [timeapi.io](https://timeapi.io) for `Pacific/Auckland`, so a wrong local PC date does not skew arrivals. If that fails, Luxon falls back to the device clock in NZ time.
 

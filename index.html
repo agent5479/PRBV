@@ -473,50 +473,50 @@
                 debug: `<span class="status-error">✖ All Feeds Failed</span>` 
             };
             
-            // Try Google Calendar first with multiple proxies
+            // Prefer Beds24 (source of truth); Google only if Beds24 hard-fails
             for (const proxy of corsProxies) {
-                const result = await tryFeed(feeds.google, todayNZ, proxy);
+                const result = await tryFeed(feeds.beds24, todayNZ, proxy);
                 
                 if (result.status === 'arrival') {
                     list.innerHTML = `<li>${result.html}</li>`;
-                    return `<span class="status-ok">✔ ARRIVAL (Google via ${proxy.substring(0, 20)}...)</span>`;
+                    return `<span class="status-ok">✔ ARRIVAL (Beds24 via ${proxy.substring(0, 20)}...)</span>`;
                 } else if (result.status === 'ongoing') {
                     finalResult = {
                         status: 'ongoing',
                         html: result.html,
-                        debug: `<span class="status-no-arrival">✔ ONGOING (Google via ${proxy.substring(0, 20)}...)</span>`
+                        debug: `<span class="status-no-arrival">✔ ONGOING (Beds24 via ${proxy.substring(0, 20)}...)</span>`
                     };
                     break; // Found ongoing stay, no need to try more proxies
                 } else if (result.status === 'no-booking') {
                     finalResult = {
                         status: 'no-booking',
                         html: result.html,
-                        debug: `<span class="status-no-arrival">✔ NO BOOKING (Google via ${proxy.substring(0, 20)}...)</span>`
+                        debug: `<span class="status-no-arrival">✔ NO BOOKING (Beds24 via ${proxy.substring(0, 20)}...)</span>`
                     };
                     break; // Got successful response showing no booking
                 }
             }
 
-            // If still error, try Beds24 with proxies
+            // If still error, try Google Calendar with proxies
             if (finalResult.status === 'error') {
                 for (const proxy of corsProxies) {
-                    const result = await tryFeed(feeds.beds24, todayNZ, proxy);
+                    const result = await tryFeed(feeds.google, todayNZ, proxy);
                     
                     if (result.status === 'arrival') {
                         list.innerHTML = `<li>${result.html}</li>`;
-                        return `<span class="status-ok">✔ ARRIVAL (Beds24 via ${proxy.substring(0, 20)}...)</span>`;
+                        return `<span class="status-ok">✔ ARRIVAL (Google via ${proxy.substring(0, 20)}...)</span>`;
                     } else if (result.status === 'ongoing') {
                         finalResult = {
                             status: 'ongoing',
                             html: result.html,
-                            debug: `<span class="status-no-arrival">✔ ONGOING (Beds24 via ${proxy.substring(0, 20)}...)</span>`
+                            debug: `<span class="status-no-arrival">✔ ONGOING (Google via ${proxy.substring(0, 20)}...)</span>`
                         };
                         break;
                     } else if (result.status === 'no-booking') {
                         finalResult = {
                             status: 'no-booking',
                             html: result.html,
-                            debug: `<span class="status-no-arrival">✔ NO BOOKING (Beds24 via ${proxy.substring(0, 20)}...)</span>`
+                            debug: `<span class="status-no-arrival">✔ NO BOOKING (Google via ${proxy.substring(0, 20)}...)</span>`
                         };
                         break;
                     }
