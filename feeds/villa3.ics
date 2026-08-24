@@ -1,0 +1,165 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//beds24.com Booking Calendar roomid=318485
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+UID:20260824140000-b90662592@beds24.com
+DTSTAMP:20260824T045039
+DTSTART;VALUE=DATE:20260824
+DTEND;VALUE=DATE:20260827
+SUMMARY:Hilary Smith
+DESCRIPTION:Arriving 24 Aug 2026\nDeparting 27 Aug 2026\n <a href='https://
+ beds24.com/control.php?bookid=90662592'>view booking</a>
+URL;VALUE=URI:https://beds24.com/control.php?bookid=90662592
+END:VEVENT
+BEGIN:VEVENT
+UID:20260902140000-b91642288@beds24.com
+DTSTAMP:20260824T045039
+DTSTART;VALUE=DATE:20260902
+DTEND;VALUE=DATE:20260905
+SUMMARY:Helen and Ben Stevens
+DESCRIPTION:Arriving 02 Sep 2026\nDeparting 05 Sep 2026\n <a href='https://
+ beds24.com/control.php?bookid=91642288'>view booking</a>
+URL;VALUE=URI:https://beds24.com/control.php?bookid=91642288
+END:VEVENT
+BEGIN:VEVENT
+UID:20261002140000-b90966887@beds24.com
+DTSTAMP:20260824T045039
+DTSTART;VALUE=DATE:20261002
+DTEND;VALUE=DATE:20261003
+SUMMARY:Judy Honeybone
+DESCRIPTION:Arriving 02 Oct 2026\nDeparting 03 Oct 2026\n <a href='https://
+ beds24.com/control.php?bookid=90966887'>view booking</a>
+URL;VALUE=URI:https://beds24.com/control.php?bookid=90966887
+END:VEVENT
+BEGIN:VEVENT
+UID:20261005140000-b89317358@beds24.com
+DTSTAMP:20260824T045039
+DTSTART;VALUE=DATE:20261005
+DTEND;VALUE=DATE:20261009
+SUMMARY:Pam Wright
+DESCRIPTION:Arriving 05 Oct 2026\nDeparting 09 Oct 2026\n <a href='https://
+ beds24.com/control.php?bookid=89317358'>view booking</a>
+URL;VALUE=URI:https://beds24.com/control.php?bookid=89317358
+END:VEVENT
+BEGIN:VEVENT
+UID:20261009140000-b90486159@beds24.com
+DTSTAMP:20260824T045039
+DTSTART;VALUE=DATE:20261009
+DTEND;VALUE=DATE:20261020
+SUMMARY:Jenny and Barry Taylor
+DESCRIPTION:Arriving 09 Oct 2026\nDeparting 20 Oct 2026\n <a href='https://
+ beds24.com/control.php?bookid=90486159'>view booking</a>
+URL;VALUE=URI:https://beds24.com/control.php?bookid=90486159
+END:VEVENT
+BEGIN:VEVENT
+UID:20261212140000-b81743703@beds24.com
+DTSTAMP:20260824T045039
+DTSTART;VALUE=DATE:20261212
+DTEND;VALUE=DATE:20261214
+SUMMARY:Sidetracks TOP26-0812
+DESCRIPTION:Arriving 12 Dec 2026\nDeparting 14 Dec 2026\n <a href='https://
+ beds24.com/control.php?bookid=81743703'>view booking</a>
+URL;VALUE=URI:https://beds24.com/control.php?bookid=81743703
+END:VEVENT
+BEGIN:VEVENT
+UID:20261223140000-b88619795@beds24.com
+DTSTAMP:20260824T045039
+DTSTART;VALUE=DATE:20261223
+DTEND;VALUE=DATE:20261229
+SUMMARY:Sylva Linda
+DESCRIPTION:Arriving 23 Dec 2026\nDeparting 29 Dec 2026\n <a href='https://
+ beds24.com/control.php?bookid=88619795'>view booking</a>
+URL;VALUE=URI:https://beds24.com/control.php?bookid=88619795
+END:VEVENT
+BEGIN:VEVENT
+UID:20261229140000-b87245158@beds24.com
+DTSTAMP:20260824T045039
+DTSTART;VALUE=DATE:20261229
+DTEND;VALUE=DATE:20270103
+SUMMARY:Mr craig coory
+DESCRIPTION:Arriving 29 Dec 2026\nDeparting 03 Jan 2027\n <a href='https://
+ beds24.com/control.php?bookid=87245158'>view booking</a>
+URL;VALUE=URI:https://beds24.com/control.php?bookid=87245158
+END:VEVENT
+BEGIN:VEVENT
+UID:20270110140000-b81019191@beds24.com
+DTSTAMP:20260824T045039
+DTSTART;VALUE=DATE:20270110
+DTEND;VALUE=DATE:20270116
+SUMMARY:Katie Arrowsmith
+DESCRIPTION:Arriving 10 Jan 2027\nDeparting 16 Jan 2027\n <a href='https://
+ beds24.com/control.php?bookid=81019191'>view booking</a>
+URL;VALUE=URI:https://beds24.com/control.php?bookid=81019191
+END:VEVENT
+BEGIN:VEVENT
+UID:20270116140000-b85035063@beds24.com
+DTSTAMP:20260824T045039
+DTSTART;VALUE=DATE:20270116
+DTEND;VALUE=DATE:20270121
+SUMMARY:Fleur Keely
+DESCRIPTION:Arriving 16 Jan 2027\nDeparting 21 Jan 2027\n <a href='https://
+ beds24.com/control.php?bookid=85035063'>view booking</a>
+URL;VALUE=URI:https://beds24.com/control.php?bookid=85035063
+END:VEVENT
+BEGIN:VEVENT
+UID:20270124140000-b83911177@beds24.com
+DTSTAMP:20260824T045039
+DTSTART;VALUE=DATE:20270124
+DTEND;VALUE=DATE:20270129
+SUMMARY:Jay Cunningham
+DESCRIPTION:Arriving 24 Jan 2027\nDeparting 29 Jan 2027\n <a href='https://
+ beds24.com/control.php?bookid=83911177'>view booking</a>
+URL;VALUE=URI:https://beds24.com/control.php?bookid=83911177
+END:VEVENT
+BEGIN:VEVENT
+UID:20270206140000-b83829509@beds24.com
+DTSTAMP:20260824T045039
+DTSTART;VALUE=DATE:20270206
+DTEND;VALUE=DATE:20270210
+SUMMARY:Michael Jacobs
+DESCRIPTION:Arriving 06 Feb 2027\nDeparting 10 Feb 2027\n <a href='https://
+ beds24.com/control.php?bookid=83829509'>view booking</a>
+URL;VALUE=URI:https://beds24.com/control.php?bookid=83829509
+END:VEVENT
+BEGIN:VEVENT
+UID:20270215140000-b87480583@beds24.com
+DTSTAMP:20260824T045039
+DTSTART;VALUE=DATE:20270215
+DTEND;VALUE=DATE:20270218
+SUMMARY:John Hoyle
+DESCRIPTION:Arriving 15 Feb 2027\nDeparting 18 Feb 2027\n <a href='https://
+ beds24.com/control.php?bookid=87480583'>view booking</a>
+URL;VALUE=URI:https://beds24.com/control.php?bookid=87480583
+END:VEVENT
+BEGIN:VEVENT
+UID:20270222140000-b81743874@beds24.com
+DTSTAMP:20260824T045039
+DTSTART;VALUE=DATE:20270222
+DTEND;VALUE=DATE:20270224
+SUMMARY:Sidetracks TOP27-18026
+DESCRIPTION:Arriving 22 Feb 2027\nDeparting 24 Feb 2027\n <a href='https://
+ beds24.com/control.php?bookid=81743874'>view booking</a>
+URL;VALUE=URI:https://beds24.com/control.php?bookid=81743874
+END:VEVENT
+BEGIN:VEVENT
+UID:20270225140000-b83678187@beds24.com
+DTSTAMP:20260824T045039
+DTSTART;VALUE=DATE:20270225
+DTEND;VALUE=DATE:20270311
+SUMMARY:Gerry and Liz Kelly
+DESCRIPTION:Arriving 25 Feb 2027\nDeparting 11 Mar 2027\n <a href='https://
+ beds24.com/control.php?bookid=83678187'>view booking</a>
+URL;VALUE=URI:https://beds24.com/control.php?bookid=83678187
+END:VEVENT
+BEGIN:VEVENT
+UID:20270319140000-b79781515@beds24.com
+DTSTAMP:20260824T045039
+DTSTART;VALUE=DATE:20270319
+DTEND;VALUE=DATE:20270322
+SUMMARY:Tullia and Josh
+DESCRIPTION:Arriving 19 Mar 2027\nDeparting 22 Mar 2027\n <a href='https://
+ beds24.com/control.php?bookid=79781515'>view booking</a>
+URL;VALUE=URI:https://beds24.com/control.php?bookid=79781515
+END:VEVENT
+END:VCALENDAR

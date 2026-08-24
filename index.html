@@ -334,18 +334,22 @@
 
         const villaFeeds = {
             villa1: {
+                local: "feeds/villa1.ics",
                 beds24: "https://api.beds24.com/ical/bookings.ics?roomid=318483&token=ea7b37ea5fc562875d2a5196a1a77ed8",
                 google: "https://calendar.google.com/calendar/ical/dg0tk02rn99u5fd9a15ltccp4u6hq464%40import.calendar.google.com/public/basic.ics"
             },
             villa2: {
+                local: "feeds/villa2.ics",
                 beds24: "https://api.beds24.com/ical/bookings.ics?roomid=318484&token=619894678ee80521412a314854aba411",
                 google: "https://calendar.google.com/calendar/ical/u8thu0g7p9eot6ppob2etrr4kun3h47n%40import.calendar.google.com/public/basic.ics"
             },
             villa3: {
+                local: "feeds/villa3.ics",
                 beds24: "https://api.beds24.com/ical/bookings.ics?roomid=318485&token=0dc12d488822f3fb0487273a4d933c84",
                 google: "https://calendar.google.com/calendar/ical/ksclvfhel50fao7ebrmkoan888uhvpo8%40import.calendar.google.com/public/basic.ics"
             },
             villa4: {
+                local: "feeds/villa4.ics",
                 beds24: "https://api.beds24.com/ical/bookings.ics?roomid=318486&token=9634a496cdf402a5c88b5685866a00e8",
                 google: "https://calendar.google.com/calendar/ical/sjrqdsa4n3ril7criqoh5k4ofhehep33%40import.calendar.google.com/public/basic.ics"
             }
@@ -410,7 +414,8 @@
             try {
                 const response = await fetch(url, { 
                     signal: controller.signal,
-                    mode: 'cors'
+                    mode: 'cors',
+                    cache: 'no-store'
                 });
                 clearTimeout(timeoutId);
                 
@@ -429,6 +434,9 @@
             try {
                 const fullUrl = proxyPrefix ? proxyPrefix + encodeURIComponent(url) : url;
                 const ics = await tryFetch(fullUrl);
+                if (!ics || !ics.includes("BEGIN:VCALENDAR")) {
+                    throw new Error("Invalid ICS");
+                }
                 const blocks = ics.split("BEGIN:VEVENT").slice(1);
 
                 let ongoingStayFound = null;
@@ -473,27 +481,51 @@
                 debug: `<span class="status-error">✖ All Feeds Failed</span>` 
             };
             
-            // Prefer Beds24 (source of truth); Google only if Beds24 hard-fails
-            for (const proxy of corsProxies) {
-                const result = await tryFeed(feeds.beds24, todayNZ, proxy);
-                
+            // Same-origin Beds24 mirror first (public CORS proxies are unreliable)
+            if (feeds.local) {
+                const localUrl = `${feeds.local}?t=${Date.now()}`;
+                const result = await tryFeed(localUrl, todayNZ, '');
                 if (result.status === 'arrival') {
                     list.innerHTML = `<li>${result.html}</li>`;
-                    return `<span class="status-ok">✔ ARRIVAL (Beds24 via ${proxy.substring(0, 20)}...)</span>`;
+                    return `<span class="status-ok">✔ ARRIVAL (Beds24 mirror)</span>`;
                 } else if (result.status === 'ongoing') {
                     finalResult = {
                         status: 'ongoing',
                         html: result.html,
-                        debug: `<span class="status-no-arrival">✔ ONGOING (Beds24 via ${proxy.substring(0, 20)}...)</span>`
+                        debug: `<span class="status-no-arrival">✔ ONGOING (Beds24 mirror)</span>`
                     };
-                    break; // Found ongoing stay, no need to try more proxies
                 } else if (result.status === 'no-booking') {
                     finalResult = {
                         status: 'no-booking',
                         html: result.html,
-                        debug: `<span class="status-no-arrival">✔ NO BOOKING (Beds24 via ${proxy.substring(0, 20)}...)</span>`
+                        debug: `<span class="status-no-arrival">✔ NO BOOKING (Beds24 mirror)</span>`
                     };
-                    break; // Got successful response showing no booking
+                }
+            }
+
+            // Live Beds24 via proxies only if the mirror failed
+            if (finalResult.status === 'error') {
+                for (const proxy of corsProxies) {
+                    const result = await tryFeed(feeds.beds24, todayNZ, proxy);
+                    
+                    if (result.status === 'arrival') {
+                        list.innerHTML = `<li>${result.html}</li>`;
+                        return `<span class="status-ok">✔ ARRIVAL (Beds24 via ${proxy.substring(0, 20)}...)</span>`;
+                    } else if (result.status === 'ongoing') {
+                        finalResult = {
+                            status: 'ongoing',
+                            html: result.html,
+                            debug: `<span class="status-no-arrival">✔ ONGOING (Beds24 via ${proxy.substring(0, 20)}...)</span>`
+                        };
+                        break; // Found ongoing stay, no need to try more proxies
+                    } else if (result.status === 'no-booking') {
+                        finalResult = {
+                            status: 'no-booking',
+                            html: result.html,
+                            debug: `<span class="status-no-arrival">✔ NO BOOKING (Beds24 via ${proxy.substring(0, 20)}...)</span>`
+                        };
+                        break; // Got successful response showing no booking
+                    }
                 }
             }
 

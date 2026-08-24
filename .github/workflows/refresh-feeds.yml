@@ -1,0 +1,55 @@
+name: Refresh calendar feeds
+
+on:
+  schedule:
+    - cron: "*/20 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch Beds24 ICS feeds
+        run: |
+          set -euo pipefail
+          mkdir -p feeds
+
+          fetch_one() {
+            local url="$1"
+            local dest="$2"
+            local tmp="${dest}.tmp"
+            if curl -fsSL --max-time 25 "$url" -o "$tmp" && grep -q "BEGIN:VCALENDAR" "$tmp"; then
+              mv "$tmp" "$dest"
+            else
+              rm -f "$tmp"
+              echo "WARN: failed to refresh ${dest}; keeping previous file if present" >&2
+              if [ ! -f "$dest" ]; then
+                echo "ERROR: ${dest} is missing and fetch failed" >&2
+                exit 1
+              fi
+            fi
+          }
+
+          fetch_one "https://api.beds24.com/ical/bookings.ics?roomid=318483&token=ea7b37ea5fc562875d2a5196a1a77ed8" feeds/villa1.ics
+          fetch_one "https://api.beds24.com/ical/bookings.ics?roomid=318484&token=619894678ee80521412a314854aba411" feeds/villa2.ics
+          fetch_one "https://api.beds24.com/ical/bookings.ics?roomid=318485&token=0dc12d488822f3fb0487273a4d933c84" feeds/villa3.ics
+          fetch_one "https://api.beds24.com/ical/bookings.ics?roomid=318486&token=9634a496cdf402a5c88b5685866a00e8" feeds/villa4.ics
+
+          date -u +"%Y-%m-%dT%H:%M:%SZ" > feeds/updated.txt
+
+      - name: Commit updated feeds
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add feeds
+          if git diff --cached --quiet; then
+            echo "No feed changes"
+          else
+            git commit -m "Refresh Beds24 calendar feeds."
+            git push
+          fi
